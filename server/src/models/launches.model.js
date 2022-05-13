@@ -72,6 +72,7 @@ async function populateLaunches() {
     await saveLaunch(launch);
   }
 }
+
 async function loadLaunchData() {
   const firstLaunch = await findLaunch({
     flightNumber: 1,
@@ -102,20 +103,16 @@ async function getLatestFlightNumber() {
   return latestLaunch.flightNumber;
 }
 
-async function getAllLaunches() {
-  return await launchesDatabase.find(
-    {},
-    {
-      __v: 0,
-      _id: 0,
-    }
-  );
+async function getAllLaunches(skip, limit) {
+  return await launchesDatabase
+    .find({}, { __v: 0, _id: 0 })
+    .skip(skip)
+    .limit(limit);
 }
 
 async function saveLaunch(launch) {
   // The first paramets is how we're finding if this launch already exists in our database.
   // The second one is what we are going to update
-
   await launchesDatabase.findOneAndUpdate(
     {
       flightNumber: launch.flightNumber,
